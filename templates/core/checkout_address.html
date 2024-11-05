@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Checkout Address Page</title>
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <style>
+    /* Adjust the image with a border and responsive size */
+    .login-img {
+      width: 100%; /* Makes the image responsive */
+      max-height: 700px; /* Adjust height as needed */
+      object-fit: cover; /* Maintains aspect ratio and covers the area */
+      border: 5px solid #333; /* Border around the image */
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Style the payment button with a border */
+    .login-btn {
+      border: 2px solid #333; /* Border around the button */
+      border-radius: 5px; /* Rounded corners */
+      padding: 10px 20px; /* Adjust padding for better appearance */
+    }
+
+    /* Center the payment button vertically and horizontally */
+    .center-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Vertically centers */
+      align-items: center;    /* Horizontally centers */
+      height: 100vh; /* Full viewport height to center vertically */
+    }
+
+    /* Center content in the login section */
+    .login-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Vertically centers within the column */
+      height: 100vh; /* Full viewport height */
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 login-section-wrapper">
+          <div class="login-wrapper">
+            {% if payment_allow == "allow" %}
+            <div class="center-button">
+              <a href="{% url 'payment' %}" class="btn login-btn">Go For Payment</a>
+            </div>
+            {% else %}
+            <h1 class="login-title">Checkout Address</h1>
+            {% if messages %}
+            {% for message in messages %}
+            <h1 class="login-title badge badge-light" style="color:red;">{{ message }}</h1>
+            {% endfor %}
+            {% endif %}
+            <form method="post">
+              {% csrf_token %}
+              {{ form }}
+              <input name="checkout" id="checkout" class="btn login-btn" type="submit" value="Checkout">
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-sm-6 px-0 d-none d-sm-block">
+          <img src="{% static 'img/login_page.jpg' %}" alt="login image" class="login-img">
+        </div> 
+      </div>
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

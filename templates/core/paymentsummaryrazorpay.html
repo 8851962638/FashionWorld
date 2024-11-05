@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cart_template_tag %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Payment Summary</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container">
+        <div class="header-container d-flex align-items-center justify-content-between">
+            <div class="logo">
+                <h1 class="text-light"><a href="{% url 'index' %}"><span>PalFashion</span></a></h1>
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    {% if user.is_authenticated %}
+                    <li><a class="nav-link scrollto active" href="{% url 'index' %}">Home</a></li>
+                    <li><a class="nav-link scrollto active" href="{% url 'orderlist' %}">Cart&nbsp;&nbsp;<span style="color:red;">{{ request.user|cart_item_count }}</span></a></li>
+                    {% if user.is_superuser %}
+                    <li><a class="nav-link scrollto active" href="{% url 'add_product' %}">Add Product</a></li>
+                    {% endif %}
+                    <li><a class="nav-link scrollto active" href="#hero">Welcome {{ user.username }}</a></li>
+                    <li><a class="getstarted scrollto" href="{% url 'user_logout' %}">Logout</a></li>
+                    {% else %}
+                    <li><a class="getstarted scrollto" href="{% url 'user_login' %}">Login</a></li>
+                    <li><a class="getstarted scrollto" href="{% url 'user_register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+        </div><!-- End Header Container -->
+    </div>
+</header><!-- End Header -->
+
+<main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Payment Summary</h2>
+                <ol>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li>Payment Summary</li>
+                </ol>
+            </div>
+        </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Payment Summary Section ======= -->
+    <section id="portfolio-details" class="portfolio-details">
+        <div class="container">
+            {% for message in messages %}
+            <h2>{{ message }}</h2>
+            {% endfor %}
+
+            <div class="row gy-4">
+                <div class="col-lg-4">
+                    <div class="portfolio-info">
+                        <h3>Payment Summary</h3>
+                        <ul>
+                            <li><strong>Total Amount</strong>: ₹{{ final_price }}</li>
+                            <li>
+                                <form action="{% url 'handlerequest' %}" method="POST">
+                                    <script
+                                       src="https://checkout.razorpay.com/v1/checkout.js"
+                                        data-key="{{ razorpay_merchant_id }}" 
+                                        data-amount="{{ final_price|floatformat:0 }}" 
+                                        data-currency="INR"
+                                        data-order_id="{{ order_id }}" 
+                                        data-buttontext="Pay with Razorpay"
+                                        data-name="My E-COMMERCE WEBSITE"
+                                        data-description="Payment for your order"
+                                        data-image="https://example.com/your_logo.jpg"
+                                        data-prefill.name="{{ request.user.username }}"
+                                        data-prefill.email="{{ request.user.email }}"
+                                        data-theme.color="#F37254"
+                                    ></script>
+                                    <input type="hidden" name="hidden"/>
+                                    {% csrf_token %}
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Payment Summary Section -->
+
+</main><!-- End #main -->
+
+<!-- Vendor JS Files -->
+<script src="{% static 'vendor/aos/aos.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+<script src="{% static 'vendor/purecounter/purecounter.js' %}"></script>
+<script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+<!-- Template Main JS File -->
+<script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>
